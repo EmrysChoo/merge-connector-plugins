@@ -121,6 +121,8 @@ HTML/XML 响应使用 `selector`，JSON 响应使用 `jsonPath`。XML v1 主要�
 
 当 `itemsPath` 的数组混有不同类型的节点时，可使用 `embeddedJSON.itemObjectPath` 提取其中一种对象；例如 `"channelRenderer"`。字段规则可用 `jsonPaths` 提供按顺序尝试的 JSON 路径，以适配同一服务在 `simpleText` 与 `runs.0.text` 之间的结构变化。
 
+声明 `subscription.mode: "feedFromExternalID"` 的搜索插件会被呈现为可订阅对象列表：应用使用每个结果的 `images`、`title`、`author` 和 `summary` 显示头像、名称与辅助信息，并在每一行提供独立的订阅按钮。
+
 ```json
 { "selector": ".title a", "attribute": "href", "required": true }
 ```

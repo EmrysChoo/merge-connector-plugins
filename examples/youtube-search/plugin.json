@@ -4,8 +4,8 @@
   "runtime": "declarative-feed",
   "id": "com.youtube.search",
   "name": "YouTube 搜索",
-  "version": "1.1.0",
-  "description": "按关键词订阅 YouTube 搜索结果。使用公开搜索页，不需要 API Key 或登录。",
+  "version": "1.2.0",
+  "description": "按关键词搜索 YouTube 博主，并从结果列表直接订阅频道。使用公开搜索页，不需要 API Key 或登录。",
   "homepage": "https://www.youtube.com/",
   "publisher": {
     "name": "Merge examples",
