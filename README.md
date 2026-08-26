@@ -103,7 +103,10 @@ LICENSE
 
 ## 声明式配置（v2）
 
-插件可声明最多 12 个由 Merge 原生界面渲染的配置项：`toggle`、`text` 和 `cookie`。点击插件管理页中的插件行即可修改。普通值仅保存在本机；Cookie 使用单独的本机 Keychain 项保存，不会写入清单、同步到其他设备，也不会展示给插件代码。
+插件可声明最多 12 个由 Merge 原生界面渲染的配置项：`toggle`、`text`、`choice`、`cookie` 和 `webLogin`。点击插件管理页中的插件行即可修改。普通值仅保存在本机；Cookie 使用单独的本机 Keychain 项保存，不会写入清单、同步到其他设备，也不会展示给插件代码。
+
+- `choice` 使用插件声明的固定选项，适合排序、地区、内容类型等有限选择。
+- `webLogin` 打开插件声明的 HTTPS 登录页。用户自行在网页中登录，点击完成后 Merge 只提取 `cookieDomain` 范围内的 Cookie 保存到 Keychain；登录页面使用临时网页数据存储，不与 Safari 或其他插件共享。
 
 Cookie 不能作为普通请求头声明。只有声明了 `cookie` 字段并由 `request.cookieFieldID` 精确引用时，Merge 才会将该字段作为 `Cookie` 请求头发送到已声明域名。配置值可在 URL 和普通请求头中用 `{{config.fieldID}}` 引用；Cookie 字段不得用于这些模板。
 
@@ -112,11 +115,13 @@ Cookie 不能作为普通请求头声明。只有声明了 `cookie` 字段并由
   "schemaVersion": 2,
   "configuration": [
     { "id": "includeReplies", "title": "包含回复", "type": "toggle", "defaultValue": "false" },
-    { "id": "sessionCookie", "title": "登录 Cookie", "type": "cookie", "placeholder": "name=value; …" }
+    { "id": "region", "title": "地区", "type": "choice", "defaultValue": "global", "options": [{ "id": "global", "title": "全球" }, { "id": "cn", "title": "中国" }] },
+    { "id": "session", "title": "登录服务", "type": "webLogin", "loginURL": "https://example.com/login" }
   ],
   "request": {
-    "url": "https://example.com/feed?replies={{config.includeReplies}}",
-    "cookieFieldID": "sessionCookie"
+    "url": "https://example.com/feed?replies={{config.includeReplies}}&region={{config.region}}",
+    "cookieFieldID": "session",
+    "cookieDomain": "example.com"
   }
 }
 ```
