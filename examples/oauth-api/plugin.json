@@ -1,0 +1,53 @@
+{
+  "$schema": "https://your-domain.example/schema/plugin.schema.json",
+  "schemaVersion": 2,
+  "runtime": "declarative-feed",
+  "id": "com.example.private-feed",
+  "name": "Example Private Feed",
+  "version": "2.0.0",
+  "description": "示例：使用宿主 App 托管的 OAuth Bearer Token 获取私有文章。",
+  "publisher": {
+    "name": "Example Author",
+    "url": "https://example.com"
+  },
+  "permissions": {
+    "domains": ["auth.example.com", "api.example.com"],
+    "maximumResponseBytes": 1048576
+  },
+  "input": {
+    "type": "username",
+    "title": "账户标识",
+    "placeholder": "输入账户标识",
+    "encoding": "urlQuery"
+  },
+  "request": {
+    "url": "https://api.example.com/private/posts?user={{input}}",
+    "method": "GET"
+  },
+  "authentication": {
+    "serviceName": "Example",
+    "loginURL": "https://auth.example.com/authorize?redirect_uri={{redirectURI}}&response_type=token",
+    "callbackScheme": "merge",
+    "tokenQueryItem": "access_token",
+    "scheme": "bearer",
+    "required": true
+  },
+  "response": {
+    "format": "json",
+    "source": {
+      "externalID": { "constant": "example-private-feed" },
+      "title": { "constant": "Example Private Feed" },
+      "homeURL": { "constant": "https://example.com" }
+    },
+    "items": {
+      "jsonPath": "items",
+      "externalID": { "jsonPath": "id", "required": true },
+      "url": { "jsonPath": "url", "required": true },
+      "title": { "jsonPath": "title", "required": true },
+      "author": { "jsonPath": "author" },
+      "publishedAt": { "jsonPath": "publishedAt" },
+      "summary": { "jsonPath": "summary" },
+      "content": { "jsonPath": "contentHTML" }
+    }
+  }
+}

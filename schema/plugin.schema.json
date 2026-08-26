@@ -1,0 +1,165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://merge.example/schema/connector-plugin-v2.json",
+  "title": "Merge Declarative Connector Plugin",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "runtime", "id", "name", "version", "description", "publisher", "permissions", "input", "request", "response"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "enum": [1, 2] },
+    "runtime": { "const": "declarative-feed" },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$", "maxLength": 160 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 60 },
+    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$" },
+    "description": { "type": "string", "maxLength": 500 },
+    "homepage": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "iconSystemName": { "type": "string", "maxLength": 80 },
+    "publisher": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "url": { "type": "string", "format": "uri", "pattern": "^https://" }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domains"],
+      "properties": {
+        "domains": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Za-z0-9.-]+$" }
+        },
+        "maximumResponseBytes": { "type": "integer", "minimum": 1, "maximum": 5242880 }
+      }
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "title", "placeholder"],
+      "properties": {
+        "type": { "enum": ["url", "username", "channel", "query", "page"] },
+        "title": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "placeholder": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "encoding": { "enum": ["raw", "urlQuery", "pathComponent"] }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url"],
+      "properties": {
+        "url": { "type": "string", "pattern": "^https://" },
+        "method": { "const": "GET" },
+        "headers": {
+          "type": "object",
+          "propertyNames": { "not": { "pattern": "^(?i:authorization|cookie|host|proxy-authorization)$" } },
+          "additionalProperties": { "type": "string", "maxLength": 500 }
+        }
+      }
+    },
+    "authentication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["serviceName", "loginURL", "tokenQueryItem"],
+      "properties": {
+        "serviceName": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "loginURL": { "type": "string", "pattern": "^https://.*\\{\\{redirectURI\\}\\}" },
+        "callbackScheme": { "const": "merge" },
+        "tokenQueryItem": { "type": "string", "pattern": "^[A-Za-z0-9_.-]+$", "maxLength": 60 },
+        "scheme": { "const": "bearer" },
+        "required": { "type": "boolean" }
+      }
+    },
+    "subscription": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "feedURL"],
+      "properties": {
+        "mode": { "const": "feedFromExternalID" },
+        "feedURL": { "type": "string", "pattern": "^https://.*\\{\\{externalID\\}\\}" }
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["format", "source", "items"],
+      "properties": {
+        "format": { "enum": ["html", "json", "xml", "htmlJSON"] },
+        "embeddedJSON": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["marker", "itemsPath"],
+          "properties": {
+            "marker": { "type": "string", "minLength": 1, "maxLength": 200 },
+            "itemsPath": { "type": "string", "minLength": 1, "maxLength": 500 },
+            "itemObjectPath": { "type": "string", "minLength": 1, "maxLength": 500 }
+          }
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["title"],
+          "properties": {
+            "externalID": { "$ref": "#/$defs/valueRule" },
+            "title": { "$ref": "#/$defs/valueRule" },
+            "homeURL": { "$ref": "#/$defs/valueRule" },
+            "iconURL": { "$ref": "#/$defs/valueRule" },
+            "description": { "$ref": "#/$defs/valueRule" }
+          }
+        },
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["externalID", "url", "title"],
+          "properties": {
+            "selector": { "type": "string" },
+            "jsonPath": { "type": "string" },
+            "externalID": { "$ref": "#/$defs/valueRule" },
+            "url": { "$ref": "#/$defs/valueRule" },
+            "title": { "$ref": "#/$defs/valueRule" },
+            "author": { "$ref": "#/$defs/valueRule" },
+            "publishedAt": { "$ref": "#/$defs/valueRule" },
+            "summary": { "$ref": "#/$defs/valueRule" },
+            "content": { "$ref": "#/$defs/valueRule" },
+            "images": { "$ref": "#/$defs/valueRule" },
+            "videos": { "$ref": "#/$defs/valueRule" },
+            "audio": { "$ref": "#/$defs/valueRule" }
+          },
+          "oneOf": [
+            { "required": ["selector"] },
+            { "required": ["jsonPath"] }
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "valueRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "selector": { "type": "string" },
+        "jsonPath": { "type": "string" },
+        "jsonPaths": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": { "type": "string", "minLength": 1, "maxLength": 500 }
+        },
+        "attribute": { "type": "string" },
+        "constant": { "type": "string" },
+        "required": { "type": "boolean" },
+        "multiple": { "type": "boolean" },
+        "dateFormat": { "type": "string" }
+      },
+      "minProperties": 1
+    }
+  }
+}

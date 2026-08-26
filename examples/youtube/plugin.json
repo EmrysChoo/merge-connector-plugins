@@ -1,0 +1,47 @@
+{
+  "$schema": "../../schema/plugin.schema.json",
+  "schemaVersion": 1,
+  "runtime": "declarative-feed",
+  "id": "com.youtube.channel.atom",
+  "name": "YouTube 频道",
+  "version": "1.0.0",
+  "description": "订阅 YouTube 公开频道的最新视频。使用官方公开 Atom Feed，不需要 API Key 或登录。",
+  "homepage": "https://www.youtube.com/",
+  "publisher": {
+    "name": "Merge examples",
+    "url": "https://www.youtube.com/"
+  },
+  "iconSystemName": "play.rectangle",
+  "permissions": {
+    "domains": ["www.youtube.com"],
+    "maximumResponseBytes": 2097152
+  },
+  "input": {
+    "type": "channel",
+    "title": "频道 ID",
+    "placeholder": "例如 UC_x5XG1OV2P6uZZ5FSM9Ttw",
+    "encoding": "urlQuery"
+  },
+  "request": {
+    "url": "https://www.youtube.com/feeds/videos.xml?channel_id={{input}}",
+    "method": "GET"
+  },
+  "response": {
+    "format": "xml",
+    "source": {
+      "externalID": { "constant": "youtube-channel" },
+      "title": { "selector": "feed > title", "required": true },
+      "homeURL": { "constant": "https://www.youtube.com/" }
+    },
+    "items": {
+      "selector": "entry",
+      "externalID": { "selector": "yt|videoId", "required": true },
+      "url": { "selector": "link[rel=alternate]", "attribute": "href", "required": true },
+      "title": { "selector": "title", "required": true },
+      "author": { "selector": "author > name" },
+      "publishedAt": { "selector": "published" },
+      "summary": { "selector": "media|description" },
+      "images": { "selector": "media|thumbnail", "attribute": "url", "multiple": true }
+    }
+  }
+}

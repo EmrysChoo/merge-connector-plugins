@@ -1,0 +1,47 @@
+{
+  "$schema": "../../schema/plugin.schema.json",
+  "schemaVersion": 1,
+  "runtime": "declarative-feed",
+  "id": "org.ycombinator.hackernews.author",
+  "name": "Hacker News 用户",
+  "version": "1.0.0",
+  "description": "订阅指定 Hacker News 用户发布的内容。",
+  "homepage": "https://hn.algolia.com/",
+  "publisher": {
+    "name": "Merge examples",
+    "url": "https://github.com/"
+  },
+  "iconSystemName": "person.crop.circle",
+  "permissions": {
+    "domains": ["hn.algolia.com"],
+    "maximumResponseBytes": 2097152
+  },
+  "input": {
+    "type": "username",
+    "title": "用户名",
+    "placeholder": "输入 Hacker News 用户名",
+    "encoding": "urlQuery"
+  },
+  "request": {
+    "url": "https://hn.algolia.com/api/v1/search_by_date?tags=author_{{input}}&hitsPerPage=100",
+    "method": "GET"
+  },
+  "response": {
+    "format": "json",
+    "source": {
+      "externalID": { "constant": "hacker-news-author" },
+      "title": { "constant": "Hacker News 用户" },
+      "homeURL": { "constant": "https://news.ycombinator.com/" }
+    },
+    "items": {
+      "jsonPath": "hits",
+      "externalID": { "jsonPath": "objectID", "required": true },
+      "url": { "jsonPath": "url", "required": true },
+      "title": { "jsonPath": "title", "required": true },
+      "author": { "jsonPath": "author" },
+      "publishedAt": { "jsonPath": "created_at" },
+      "content": { "jsonPath": "story_text" }
+    }
+  }
+}
+

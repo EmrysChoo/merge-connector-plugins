@@ -1,0 +1,44 @@
+{
+  "$schema": "../../schema/plugin.schema.json",
+  "schemaVersion": 1,
+  "runtime": "declarative-feed",
+  "id": "org.ycombinator.hackernews.html",
+  "name": "Hacker News 网页",
+  "version": "1.0.0",
+  "description": "通过 Hacker News 网页提取指定页的文章。",
+  "homepage": "https://news.ycombinator.com/",
+  "publisher": {
+    "name": "Merge examples",
+    "url": "https://github.com/"
+  },
+  "iconSystemName": "text.document",
+  "permissions": {
+    "domains": ["news.ycombinator.com"],
+    "maximumResponseBytes": 1048576
+  },
+  "input": {
+    "type": "page",
+    "title": "页码",
+    "placeholder": "输入页码，例如 1",
+    "encoding": "urlQuery"
+  },
+  "request": {
+    "url": "https://news.ycombinator.com/news?p={{input}}",
+    "method": "GET"
+  },
+  "response": {
+    "format": "html",
+    "source": {
+      "externalID": { "constant": "hacker-news" },
+      "title": { "constant": "Hacker News" },
+      "homeURL": { "constant": "https://news.ycombinator.com/" }
+    },
+    "items": {
+      "selector": "tr.athing",
+      "externalID": { "attribute": "id", "required": true },
+      "url": { "selector": ".titleline > a", "attribute": "href", "required": true },
+      "title": { "selector": ".titleline > a", "required": true }
+    }
+  }
+}
+

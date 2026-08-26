@@ -1,0 +1,58 @@
+{
+  "$schema": "../../schema/plugin.schema.json",
+  "schemaVersion": 1,
+  "runtime": "declarative-feed",
+  "id": "com.youtube.search",
+  "name": "YouTube 搜索",
+  "version": "1.1.0",
+  "description": "按关键词订阅 YouTube 搜索结果。使用公开搜索页，不需要 API Key 或登录。",
+  "homepage": "https://www.youtube.com/",
+  "publisher": {
+    "name": "Merge examples",
+    "url": "https://www.youtube.com/"
+  },
+  "iconSystemName": "magnifyingglass",
+  "permissions": {
+    "domains": ["www.youtube.com"],
+    "maximumResponseBytes": 5242880
+  },
+  "input": {
+    "type": "query",
+    "title": "搜索关键词",
+    "placeholder": "例如 SwiftUI 教程",
+    "encoding": "urlQuery"
+  },
+  "request": {
+    "url": "https://www.youtube.com/results?search_query={{input}}&sp=EgIQAg%3D%3D",
+    "method": "GET"
+  },
+  "response": {
+    "format": "htmlJSON",
+    "embeddedJSON": {
+      "marker": "var ytInitialData = ",
+      "itemsPath": "contents.twoColumnSearchResultsRenderer.primaryContents.sectionListRenderer.contents.0.itemSectionRenderer.contents",
+      "itemObjectPath": "channelRenderer"
+    },
+    "source": {
+      "externalID": { "constant": "youtube-search" },
+      "title": { "constant": "YouTube 搜索结果" },
+      "homeURL": { "constant": "https://www.youtube.com/" }
+    },
+    "subscription": {
+      "mode": "feedFromExternalID",
+      "feedURL": "https://www.youtube.com/feeds/videos.xml?channel_id={{externalID}}"
+    },
+    "items": {
+      "jsonPath": "items",
+      "externalID": { "jsonPath": "channelId", "required": true },
+      "url": { "jsonPath": "navigationEndpoint.commandMetadata.webCommandMetadata.url", "required": true },
+      "title": {
+        "jsonPaths": ["title.simpleText", "title.runs.0.text"],
+        "required": true
+      },
+      "author": { "jsonPaths": ["subscriberCountText.simpleText", "subscriberCountText.runs.0.text"] },
+      "summary": { "jsonPaths": ["descriptionSnippet.runs.0.text", "descriptionSnippet.simpleText"] },
+      "images": { "jsonPath": "thumbnail.thumbnails.0.url" }
+    }
+  }
+}
