@@ -61,6 +61,25 @@
           "type": "object",
           "propertyNames": { "not": { "pattern": "^(?i:authorization|cookie|host|proxy-authorization)$" } },
           "additionalProperties": { "type": "string", "maxLength": 500 }
+        },
+        "cookieFieldID": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,39}$" }
+      }
+    },
+    "configuration": {
+      "type": "array",
+      "maxItems": 12,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "type"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,39}$" },
+          "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+          "type": { "enum": ["toggle", "text", "cookie"] },
+          "placeholder": { "type": "string", "maxLength": 120 },
+          "detail": { "type": "string", "maxLength": 240 },
+          "defaultValue": { "type": "string", "maxLength": 500 }
         }
       }
     },

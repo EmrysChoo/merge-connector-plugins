@@ -8,7 +8,7 @@ Merge Connector 是一种**数据描述文件**，用于把没有 RSS 输出的�
 
 - 让网站通过 HTML/CSS Selector 或 JSON Path 输出统一文章数据。
 - 所有网络请求由 Merge 发起并执行权限检查。
-- 插件不能读取文件、Keychain、Cookie、剪贴板、位置、相册或其他系统数据。
+- 插件不能读取文件、Keychain、剪贴板、位置、相册或其他系统数据；仅可由宿主代为使用明确声明的本地配置值。
 - 安装前向用户展示发布者和允许访问的域名。
 - 插件数据与 App 的文章模型解耦，不要求返回 RSS。
 - 需要登录的服务由 App 托管授权和 Keychain 保存，插件不能读取 Cookie、Token 或系统 API。
@@ -77,7 +77,7 @@ LICENSE
 }
 ```
 
-完整字段约束见 [`schema/plugin.schema.json`](schema/plugin.schema.json)。v1 插件继续可用；只有声明 `authentication` 时才使用 v2。
+完整字段约束见 [`schema/plugin.schema.json`](schema/plugin.schema.json)。v1 插件继续可用；声明 `authentication` 或 `configuration` 时必须使用 v2。
 
 ## 受控账户能力（v2）
 
@@ -99,7 +99,29 @@ LICENSE
 
 用户点击登录后，Merge 使用系统授权界面完成登录，将回调中的访问令牌写入本机 Keychain。请求由 Merge 统一发出，并且只为对应插件的声明域名添加短期 Bearer 认证。插件作者看不到令牌，插件清单也不能保存令牌。
 
-用户可以在插件管理页退出登录；删除插件时，关联 Keychain 凭据会一并删除。需要 Cookie 会话的网站不能通过通用插件导入 Cookie，应为具体服务实现经过审核的宿主适配。
+用户可以在插件管理页退出登录；删除插件时，关联 Keychain 凭据会一并删除。
+
+## 声明式配置（v2）
+
+插件可声明最多 12 个由 Merge 原生界面渲染的配置项：`toggle`、`text` 和 `cookie`。点击插件管理页中的插件行即可修改。普通值仅保存在本机；Cookie 使用单独的本机 Keychain 项保存，不会写入清单、同步到其他设备，也不会展示给插件代码。
+
+Cookie 不能作为普通请求头声明。只有声明了 `cookie` 字段并由 `request.cookieFieldID` 精确引用时，Merge 才会将该字段作为 `Cookie` 请求头发送到已声明域名。配置值可在 URL 和普通请求头中用 `{{config.fieldID}}` 引用；Cookie 字段不得用于这些模板。
+
+```json
+{
+  "schemaVersion": 2,
+  "configuration": [
+    { "id": "includeReplies", "title": "包含回复", "type": "toggle", "defaultValue": "false" },
+    { "id": "sessionCookie", "title": "登录 Cookie", "type": "cookie", "placeholder": "name=value; …" }
+  ],
+  "request": {
+    "url": "https://example.com/feed?replies={{config.includeReplies}}",
+    "cookieFieldID": "sessionCookie"
+  }
+}
+```
+
+插件作者只能声明字段名称、用途和请求位置；不能读取、导出或执行 Cookie，也不能对用户未声明的域名发送它。
 
 ## 输入模板
 
