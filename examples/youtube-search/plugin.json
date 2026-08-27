@@ -28,7 +28,8 @@
   },
   "subscription": {
     "mode": "feedFromExternalID",
-    "feedURL": "https://www.youtube.com/feeds/videos.xml?channel_id={{externalID}}"
+    "feedURL": "https://www.youtube.com/feeds/videos.xml?channel_id={{externalID}}",
+    "targetKind": "channel"
   },
   "response": {
     "format": "htmlJSON",

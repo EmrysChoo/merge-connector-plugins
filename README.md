@@ -148,7 +148,7 @@ HTML/XML 响应使用 `selector`，JSON 响应使用 `jsonPath`。XML v1 主要�
 
 当 `itemsPath` 的数组混有不同类型的节点时，可使用 `embeddedJSON.itemObjectPath` 提取其中一种对象；例如 `"channelRenderer"`。`itemsPaths` 和 `itemObjectPaths` 可分别声明多个备用路径和节点类型，以适配同一服务的桌面、移动版响应；字段规则可用 `jsonPaths` 提供按顺序尝试的 JSON 路径，以适配同一服务在 `simpleText` 与 `runs.0.text` 之间的结构变化。
 
-插件搜索只用于发现可订阅的源、频道或作者，不提供“搜索文章”能力。声明 `subscription.mode: "feedFromExternalID"` 的搜索插件会被呈现为可订阅对象列表：应用使用每个结果的 `images`、`title`、`author` 和 `summary` 显示头像、名称与辅助信息，并在每一行提供独立的订阅按钮。未声明该能力的插件只显示订阅源确认信息，不会在添加订阅页展示文章列表。
+插件搜索只用于发现可订阅的源、频道或作者，不提供“搜索文章”能力。声明 `subscription.mode: "feedFromExternalID"` 的搜索插件会被呈现为可订阅对象列表：可用 `targetKind` 标记作者、频道、播放列表、播客、仓库、合集或订阅源；应用使用每个结果的 `images`、`title`、`author` 和 `summary` 显示头像、名称与辅助信息，并在每一行提供独立的订阅按钮。未声明该能力的插件只显示订阅源确认信息，不会在添加订阅页展示文章列表。
 
 ```json
 { "selector": ".title a", "attribute": "href", "required": true }
@@ -196,4 +196,3 @@ HTML 的 `attribute` 支持普通属性以及特殊值 `html`。媒体字段设�
 - [`examples/oauth-api/plugin.json`](examples/oauth-api/plugin.json)：v2 受控 Bearer Token 登录示例（虚构域名，仅用于结构参考）。
 - [`examples/youtube/plugin.json`](examples/youtube/plugin.json)：YouTube 公开频道 Atom Feed 示例，输入频道 ID 即可使用。
 - [`examples/youtube-search/plugin.json`](examples/youtube-search/plugin.json)：YouTube 频道/博主搜索示例，输入关键词、选择频道后订阅该频道。
-- [`examples/reddit/plugin.json`](examples/reddit/plugin.json)：Reddit Subreddit Atom RSS 示例，输入 Subreddit 名称即可订阅。

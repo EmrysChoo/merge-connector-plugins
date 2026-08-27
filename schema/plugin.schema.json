@@ -118,6 +118,7 @@
       "required": ["mode", "feedURL"],
       "properties": {
         "mode": { "const": "feedFromExternalID" },
+        "targetKind": { "enum": ["author", "channel", "playlist", "podcast", "repository", "collection", "feed"] },
         "feedURL": { "type": "string", "pattern": "^https://.*\\{\\{externalID\\}\\}" }
       }
     },
