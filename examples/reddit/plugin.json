@@ -24,7 +24,10 @@
   },
   "request": {
     "url": "https://www.reddit.com/r/{{input}}/.rss?limit=100",
-    "method": "GET"
+    "method": "GET",
+    "headers": {
+      "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)"
+    }
   },
   "response": {
     "format": "xml",
