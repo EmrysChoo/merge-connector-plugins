@@ -196,3 +196,4 @@ HTML 的 `attribute` 支持普通属性以及特殊值 `html`。媒体字段设�
 - [`examples/oauth-api/plugin.json`](examples/oauth-api/plugin.json)：v2 受控 Bearer Token 登录示例（虚构域名，仅用于结构参考）。
 - [`examples/youtube/plugin.json`](examples/youtube/plugin.json)：YouTube 公开频道 Atom Feed 示例，输入频道 ID 即可使用。
 - [`examples/youtube-search/plugin.json`](examples/youtube-search/plugin.json)：YouTube 频道/博主搜索示例，输入关键词、选择频道后订阅该频道。
+- [`examples/reddit/plugin.json`](examples/reddit/plugin.json)：Reddit Subreddit Atom RSS 示例，输入 Subreddit 名称即可订阅。
