@@ -134,7 +134,9 @@
           "properties": {
             "marker": { "type": "string", "minLength": 1, "maxLength": 200 },
             "itemsPath": { "type": "string", "minLength": 1, "maxLength": 500 },
-            "itemObjectPath": { "type": "string", "minLength": 1, "maxLength": 500 }
+            "itemsPaths": { "type": "array", "minItems": 1, "maxItems": 6, "items": { "type": "string", "minLength": 1, "maxLength": 500 } },
+            "itemObjectPath": { "type": "string", "minLength": 1, "maxLength": 500 },
+            "itemObjectPaths": { "type": "array", "minItems": 1, "maxItems": 6, "items": { "type": "string", "minLength": 1, "maxLength": 500 } }
           }
         },
         "source": {

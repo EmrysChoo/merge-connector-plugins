@@ -146,7 +146,7 @@ HTML/XML 响应使用 `selector`，JSON 响应使用 `jsonPath`。XML v1 主要�
 
 `htmlJSON` 用于网页中明确标记的 JSON 数据，例如 YouTube 的 `ytInitialData`。Merge 只提取并解析 JSON，不执行其中的 JavaScript。
 
-当 `itemsPath` 的数组混有不同类型的节点时，可使用 `embeddedJSON.itemObjectPath` 提取其中一种对象；例如 `"channelRenderer"`。字段规则可用 `jsonPaths` 提供按顺序尝试的 JSON 路径，以适配同一服务在 `simpleText` 与 `runs.0.text` 之间的结构变化。
+当 `itemsPath` 的数组混有不同类型的节点时，可使用 `embeddedJSON.itemObjectPath` 提取其中一种对象；例如 `"channelRenderer"`。`itemsPaths` 和 `itemObjectPaths` 可分别声明多个备用路径和节点类型，以适配同一服务的桌面、移动版响应；字段规则可用 `jsonPaths` 提供按顺序尝试的 JSON 路径，以适配同一服务在 `simpleText` 与 `runs.0.text` 之间的结构变化。
 
 声明 `subscription.mode: "feedFromExternalID"` 的搜索插件会被呈现为可订阅对象列表：应用使用每个结果的 `images`、`title`、`author` 和 `summary` 显示头像、名称与辅助信息，并在每一行提供独立的订阅按钮。
 
