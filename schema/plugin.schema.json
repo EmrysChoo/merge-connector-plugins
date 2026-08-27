@@ -115,9 +115,9 @@
     "subscription": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["mode", "feedURL"],
+      "required": ["mode"],
       "properties": {
-        "mode": { "const": "feedFromExternalID" },
+        "mode": { "enum": ["feedFromExternalID", "connectorFromExternalID"] },
         "targetKind": { "enum": ["author", "channel", "playlist", "podcast", "repository", "collection", "feed"] },
         "defaultFilters": {
           "type": "array", "maxItems": 12,
@@ -133,7 +133,21 @@
           }
         },
         "feedURL": { "type": "string", "pattern": "^https://.*\\{\\{externalID\\}\\}" }
-      }
+        ,
+        "connectorContent": {
+          "type": "object", "additionalProperties": false,
+          "required": ["request", "response"],
+          "properties": {
+            "inputTemplate": { "type": "string", "maxLength": 500 },
+            "request": { "$ref": "#/properties/request" },
+            "response": { "$ref": "#/properties/response" }
+          }
+        }
+      },
+      "allOf": [
+        { "if": { "properties": { "mode": { "const": "feedFromExternalID" } } }, "then": { "required": ["feedURL"] } },
+        { "if": { "properties": { "mode": { "const": "connectorFromExternalID" } } }, "then": { "required": ["connectorContent"] } }
+      ]
     },
     "response": {
       "type": "object",

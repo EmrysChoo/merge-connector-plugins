@@ -104,6 +104,8 @@ LICENSE
 
 搜索插件的 `items.externalID` 必须是可生成订阅地址的稳定对象 ID，例如频道 ID，而不是展示名称或 URL 片段。
 
+对于没有 RSS / Atom 的平台，使用 `subscription.mode: "connectorFromExternalID"`。它将选中对象的稳定 ID 保存为插件订阅输入，并使用 `connectorContent.request` 与 `connectorContent.response` 在后续刷新时获取文章；这不是网页自动化，也不执行远程代码。
+
 ## 订阅对象与源级过滤
 
 ```json
@@ -120,6 +122,34 @@ LICENSE
 ```
 
 `targetKind` 取值为 `author`、`channel`、`playlist`、`podcast`、`repository`、`collection` 或 `feed`。`defaultFilters` 最多 12 条，每条最多 20 个关键词；它们是建议值，不会锁定用户，订阅后可在源设置中编辑或删除。
+
+### 非 RSS 博主订阅
+
+```json
+{
+  "subscription": {
+    "mode": "connectorFromExternalID",
+    "targetKind": "author",
+    "connectorContent": {
+      "inputTemplate": "{{externalID}}",
+      "request": { "url": "https://api.example.com/users/{{input}}/posts" },
+      "response": {
+        "format": "json",
+        "source": { "title": { "constant": "Example 作者" } },
+        "items": {
+          "jsonPath": "posts",
+          "externalID": { "jsonPath": "id", "required": true },
+          "url": { "jsonPath": "url", "required": true },
+          "title": { "jsonPath": "title", "required": true },
+          "content": { "jsonPath": "html" }
+        }
+      }
+    }
+  }
+}
+```
+
+`connectorContent` 的请求、响应与主插件同样受域名、HTTPS、GET、响应大小和配置/凭据限制。它不能复用搜索响应来伪装文章列表：搜索响应用于发现对象，内容响应用于订阅后的刷新。
 
 ## 受控账户能力（v2）
 
