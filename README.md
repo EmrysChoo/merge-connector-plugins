@@ -150,6 +150,8 @@ HTML/XML 响应使用 `selector`，JSON 响应使用 `jsonPath`。XML v1 主要�
 
 插件搜索只用于发现可订阅的源、频道或作者，不提供“搜索文章”能力。声明 `subscription.mode: "feedFromExternalID"` 的搜索插件会被呈现为可订阅对象列表：可用 `targetKind` 标记作者、频道、播放列表、播客、仓库、合集或订阅源；应用使用每个结果的 `images`、`title`、`author` 和 `summary` 显示头像、名称与辅助信息，并在每一行提供独立的订阅按钮。未声明该能力的插件只显示订阅源确认信息，不会在添加订阅页展示文章列表。
 
+`subscription.defaultFilters` 可声明订阅时应用到该源的建议过滤规则，字段为 `title`、`content` 或 `author`。它们会转换为源设置中可见、可编辑、可删除的屏蔽规则，不会影响其他订阅源。
+
 ```json
 { "selector": ".title a", "attribute": "href", "required": true }
 ```

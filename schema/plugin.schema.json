@@ -119,6 +119,19 @@
       "properties": {
         "mode": { "const": "feedFromExternalID" },
         "targetKind": { "enum": ["author", "channel", "playlist", "podcast", "repository", "collection", "feed"] },
+        "defaultFilters": {
+          "type": "array", "maxItems": 12,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["id", "title", "field", "values"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_-]{0,39}$" },
+              "title": { "type": "string", "minLength": 1, "maxLength": 80 },
+              "field": { "enum": ["title", "content", "author"] },
+              "values": { "type": "array", "minItems": 1, "maxItems": 20, "items": { "type": "string", "minLength": 1, "maxLength": 120 } }
+            }
+          }
+        },
         "feedURL": { "type": "string", "pattern": "^https://.*\\{\\{externalID\\}\\}" }
       }
     },
